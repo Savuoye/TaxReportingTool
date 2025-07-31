@@ -1,13 +1,10 @@
-package com.fisglobal.taxreporting.entity.model.taxreporting.akb;
+package com.fisglobal.taxreporting.controller.dto.akb;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.MappedSuperclass;
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -16,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 import com.fisglobal.taxreporting.entity.model.taxreporting.SubTable;
 import com.fisglobal.taxreporting.entity.model.taxreporting.UniqueKey;
+import com.fisglobal.taxreporting.entity.model.taxreporting.akb.TrTableAkbPK;
 
 
 @MappedSuperclass
@@ -24,7 +22,6 @@ import com.fisglobal.taxreporting.entity.model.taxreporting.UniqueKey;
 @AllArgsConstructor
 public abstract class TrTableAkb implements SubTable, Serializable {
     @Valid
-    @EmbeddedId
     private TrTableAkbPK trTableAkbPK;
 
     @Override
@@ -34,25 +31,19 @@ public abstract class TrTableAkb implements SubTable, Serializable {
                 trTableAkbPK.getKeyUhrzeit(), trTableAkbPK.getKeySatzart());
     }
 
-    @Column(name = "AKB_ANT_ANZAHL")
-    @Digits(
-            integer = 13,
-            fraction = 5,
+    @Pattern(
+            regexp = "^$|^\\d{1,13}(\\.\\d{1,5})?$",
             message = "Integer length must be less than or equal to 13, and the fractional part length must be less than or equal to 5")
-    private BigDecimal akbAntAnzahl;
+    private String akbAntAnzahl;
 
-    @Column(name = "AKB_ANT_BEZEICHN", length = 25, columnDefinition = "CHAR(25)")
     @Size(max = 25)
     private String akbAntBezeichn;
 
-    @Column(name = "AKB_ANT_GEWINN")
-    @Digits(
-            integer = 15,
-            fraction = 3,
+    @Pattern(
+            regexp = "^$|[-]?\\d{1,15}(\\.\\d{1,3})?$",
             message = "Integer length must be less than or equal to 15, and the fractional part length must be less than or equal to 3")
-    private BigDecimal akbAntGewinn;
+    private String akbAntGewinn;
 
-    @Column(name = "AKB_ANT_ISIN", length = 12, columnDefinition = "CHAR(12)")
     @Size(max = 12)
     private String akbAntIsin;
 }
